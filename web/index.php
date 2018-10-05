@@ -62,7 +62,7 @@ $app->get('/db/', function() use($app) {
 
 
 //Add new handler to insert into database
-$app->post('register/submitUser/', function() use($app) {
+$app->post('/submitUser/', function() use($app) {
   $st = $app['pdo']->prepare('INSERT INTO user_table values (?,?,\'blablabla\',\'blablabla\') ');
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
