@@ -24,9 +24,9 @@ $app->get('/', function() use($app) {
 
 
 //START MY CODE HERE
-$app->get('/test/', function() use($app) {
+$app->get('/register/', function() use($app) {
   $app['monolog']->addDebug('logging output.');
-  return $app['twig']->render('test.twig');
+  return $app['twig']->render('reg.twig');
 });
 
 //DB Tutorial
