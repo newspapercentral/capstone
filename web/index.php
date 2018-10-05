@@ -22,7 +22,13 @@ $app->get('/', function() use($app) {
   return $app['twig']->render('index.twig');
 });
 
+
 //START MY CODE HERE
+$app->get('/test/', function() use($app) {
+  $app['monolog']->addDebug('logging output.');
+  return $app['twig']->render('test.twig');
+});
+
 //DB Tutorial
 $dbopts = parse_url(getenv('DATABASE_URL'));
 $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
