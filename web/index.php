@@ -65,7 +65,8 @@ $app->post('/register', function() use($app) {
 });
 
 $app->post('/login', function() use($app) {
-    echo 'log in will go here';
+    return 'log in will go here';
+    
 });
 
 // END MY CODE HERE
