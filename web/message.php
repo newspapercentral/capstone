@@ -23,7 +23,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->get('/', function() use($app) {
   $app['monolog']->addDebug('logging output.');
-  return $app['twig']->render('index.twig');
+  return $app['twig']->render('message.twig');
 });
 
 
@@ -45,7 +45,7 @@ $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider
 
 //Add new handler to query database
 $app->get('/db/', function() use($app) {
-  $st = $app['pdo']->prepare('SELECT * FROM test_table');
+  $st = $app['pdo']->prepare('SELECT * FROM message_table');
   $st->execute();
 
   $names = array();
@@ -60,30 +60,27 @@ $app->get('/db/', function() use($app) {
 });
 
 //Add new handler to insert into database
-$app->post('/register', function(Request $request) use($app) {
+$app->post('/send', function(Request $request) use($app) {
   
-  $username = $request->get('username');
-  $password = $request->get('password');  
+    return 'message sent test!';
+//   $username = $request->get('username');
+//   $password = $request->get('password');  
     
-  $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'semi123', 'semi1234');");
-  $st->bindValue(1, $username, PDO::PARAM_STR);
-  $st->bindValue(2, $password, PDO::PARAM_STR);
-  if($st->execute()){
-      //INSERT worked
-      return $app->redirect('../?success=true');
-  }else{
-      //INSERT failed
-      return $app->redirect('../?success=fail');
-  }   
+//   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'semi123', 'semi1234');");
+//   $st->bindValue(1, $username, PDO::PARAM_STR);
+//   $st->bindValue(2, $password, PDO::PARAM_STR);
+//   if($st->execute()){
+//       //INSERT worked
+//       return $app->redirect('../?success=true');
+//   }else{
+//       //INSERT failed
+//       return $app->redirect('../?success=fail');
+//   }   
 });
 
-$app->post('/login', function() use($app) {
-    return 'log in will go here';
+$app->get('/login/', function() use($app) {
+    return $app['twig']->render('index.twig');
     
-});
-
-$app->get('/inbox/', function() use($app) {
-    return $app['twig']->render('message.twig');
 });
 
 // END MY CODE HERE
