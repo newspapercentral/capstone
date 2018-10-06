@@ -55,7 +55,7 @@ $app->get('/db/user', function() use($app) {
   }
 
   return $app['twig']->render('database.twig', array(
-    'user_nm' => $data
+    'data' => $data
   ));
 });
 
