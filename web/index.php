@@ -61,7 +61,8 @@ $app->post('/register', function() use($app) {
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
   $st->execute();
-  return $app['twig']->render('index.twig');
+  return 'you typed username:' . $username . 'and password' . $password;
+  //return $app['twig']->render('index.twig');
 });
 
 $app->post('/login', function() use($app) {
