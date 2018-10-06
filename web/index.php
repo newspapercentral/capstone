@@ -115,7 +115,7 @@ $app->get('/inbox/', function() use($app) {
 });
 
 $app->get('/inbox/login', function() use($app) {
-    return $app->redirect('../../');
+    return $app->redirect('../');
 });
 
 // END MY CODE HERE
