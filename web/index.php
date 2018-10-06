@@ -77,6 +77,28 @@ $app->post('/register', function(Request $request) use($app) {
   }   
 });
 
+$app->post('/inbox/send', function(Request $request) use($app) {
+    
+    $to = $request->get('to');
+    $from = $request->get('from');
+    $subject =  $request->get('subject');
+    $message  = $request->get('message');
+    $message_id = $from . time();
+    
+    $st = $app['pdo']->prepare("INSERT INTO message_table (message_id, to_id, from_id, subject, text ) values (?,?,?,?,?);");
+    $st->bindValue(1, $message_id, PDO::PARAM_STR);
+    $st->bindValue(2, $to, PDO::PARAM_STR);
+    $st->bindValue(3, $from, PDO::PARAM_STR);
+    
+    if($st->execute()){
+        //INSERT worked
+        return $app->redirect('../?success=true');
+    }else{
+        //INSERT failed
+        return $app->redirect('../?success=fail');
+    }
+});
+
 $app->post('/login', function() use($app) {
     return 'log in will go here';
     
