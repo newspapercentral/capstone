@@ -98,10 +98,10 @@ $app->post('/inbox/send', function(Request $request) use($app) {
     
     if($st->execute()){
         //INSERT worked
-        return $app->redirect('../?success=true');
+        return $app->redirect('../inbox?success=true');
     }else{
         //INSERT failed
-        return $app->redirect('../?success=fail');
+        return $app->redirect('../inbox?success=fail');
     }
 });
 
@@ -115,7 +115,7 @@ $app->get('/inbox/', function() use($app) {
 });
 
 $app->get('/inbox/login', function() use($app) {
-    return $app->redirect('../');
+    return $app->redirect('../../');
 });
 
 // END MY CODE HERE
