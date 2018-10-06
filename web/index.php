@@ -56,10 +56,10 @@ $app->get('/db/', function() use($app) {
 });
 
 //Add new handler to insert into database
-$app->post('/register', function(Request $request) use($app) {
+$app->post('/register', function() use($app) {
   
   $username = $request->get('username');
-  $password = $request->get('password');
+  $password = $request->get('password');  
     
   $st = $app['pdo']->prepare('INSERT INTO user_table values (?,?,\'blablabla\',\'blablabla\') ');
   $st->bindValue(1, $username, PDO::PARAM_STR);
