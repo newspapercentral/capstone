@@ -5,6 +5,10 @@ require('../vendor/autoload.php');
 $app = new Silex\Application();
 $app['debug'] = true;
 
+//My ADD
+use Symfony\Component\HttpFoundation\Request; 
+//END My ADD
+
 // Register the monolog logging service
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
   'monolog.logfile' => 'php://stderr',
