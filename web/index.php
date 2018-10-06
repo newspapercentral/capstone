@@ -87,7 +87,7 @@ $app->get('/inbox/', function() use($app) {
 });
 
 $app->get('/inbox/login', function() use($app) {
-    return $app['twig']->render('index.twig');
+    return $app->redirect('../../');
 });
 
 // END MY CODE HERE
