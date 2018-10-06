@@ -68,10 +68,13 @@ $app->post('/register', function(Request $request) use($app) {
   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'semi123', 'semi1234');");
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
-  $st->execute();
-  return $app->redirect('../');
-  //return 'you typed username:' . $username . 'and password' . $password;
-  //return $app['twig']->render('index.twig');
+  if($st->execute()){
+      //INSERT worked
+      return $app->redirect('../');
+  }else{
+      //INSERT failed
+      return 'registration failed!';
+  }   
 });
 
 $app->post('/login', function() use($app) {
