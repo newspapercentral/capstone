@@ -50,8 +50,8 @@ $app->get('/db/user', function() use($app) {
 
   $data = array();
   while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-    $app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
-    $data[] = $row;
+    //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
+    $data[] = implode("," , $row);
   }
 
   return $app['twig']->render('database.twig', array(
