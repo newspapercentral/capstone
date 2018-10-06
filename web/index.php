@@ -70,10 +70,10 @@ $app->post('/register', function(Request $request) use($app) {
   $st->bindValue(2, $password, PDO::PARAM_STR);
   if($st->execute()){
       //INSERT worked
-      return $app->redirect('../');
+      return $app->redirect('../?success=true');
   }else{
       //INSERT failed
-      return 'registration failed!';
+      return $app->redirect('../?success=fail');
   }   
 });
 
