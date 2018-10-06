@@ -56,17 +56,17 @@ $app->get('/db/', function() use($app) {
 });
 
 //Add new handler to insert into database
-$app->post('/register', function() use($app) {
+$app->post('/register', function(Request $request) use($app) {
   
-  //$username = $request->get('username');
-  //$password = $request->get('password');  
+  $username = $request->get('username');
+  $password = $request->get('password');  
     
-  $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values ('semicolon','semi','semi123', 'semi1234');");
+  //$st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values ('semicolon','semi','semi123', 'semi1234');");
   //$st->bindValue(1, $username, PDO::PARAM_STR);
   //$st->bindValue(2, $password, PDO::PARAM_STR);
-  $st->execute();
-  return $app->redirect('../');
-  //return 'you typed username:' . $username . 'and password' . $password;
+  //$st->execute();
+  //return $app->redirect('../');
+  return 'you typed username:' . $username . 'and password' . $password;
   //return $app['twig']->render('index.twig');
 });
 
