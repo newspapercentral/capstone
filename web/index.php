@@ -85,10 +85,16 @@ $app->post('/inbox/send', function(Request $request) use($app) {
     $message  = $request->get('message');
     $message_id = $from . time();
     
-    $st = $app['pdo']->prepare("INSERT INTO message_table (message_id, to_id, from_id, subject, text ) values (?,?,?,'Filler Subject','Filler Message');");
+    $st = $app['pdo']->prepare("INSERT INTO message_table (message_id, to_id, from_id, subject, text) values (?,?,?,'Filler Subject','Filler Message');");
     $st->bindValue(1, $message_id, PDO::PARAM_STR);
     $st->bindValue(2, $to, PDO::PARAM_STR);
     $st->bindValue(3, $from, PDO::PARAM_STR);
+    
+    $app['monolog']->addDebug("to=" . $to);
+    $app['monolog']->addDebug("from=" . $from);
+    $app['monolog']->addDebug("subject=" . $subject);
+    $app['monolog']->addDebug("message=" . $message);
+    $app['monolog']->addDebug("id=" . $message_id);
     
     if($st->execute()){
         //INSERT worked
