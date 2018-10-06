@@ -26,7 +26,18 @@ $app->get('/', function() use($app) {
 //START MY CODE HERE
 $app->get('/register/', function() use($app) {
   $app['monolog']->addDebug('logging output.');
-  return $app['twig']->render('reg.twig');
+  $output='';
+  $output.='<form action="../submitUser" method="post">';
+  $output.='Username: <input type="text" name="username"><br>';
+  $output.='Password: <input type="password" name="password"><br>';
+  $output.='Confirm Password:<input type="password" name="password2"><br>';
+  $output.='Security Question: "What was your first dog's name?" <br>';
+  $output.='Answer: <input type="text" name="securityAnswer"> <br>';
+  $output.='<input type="submit">';
+  $output.='</form>';
+  return $output;
+
+  //return $app['twig']->render('reg.twig');
 });
 
 //DB Tutorial
@@ -59,7 +70,6 @@ $app->get('/db/', function() use($app) {
     'names' => $names
   ));
 });
-
 
 //Add new handler to insert into database
 $app->post('/submitUser/', function() use($app) {
