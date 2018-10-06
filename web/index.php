@@ -31,7 +31,7 @@ $app->get('/register/', function() use($app) {
   $output.='Username: <input type="text" name="username"><br>';
   $output.='Password: <input type="password" name="password"><br>';
   $output.='Confirm Password:<input type="password" name="password2"><br>';
-  $output.='Security Question: "What was your first dog's name?" <br>';
+  $output.='Security Question: "What was your first dog name?" <br>';
   $output.='Answer: <input type="text" name="securityAnswer"> <br>';
   $output.='<input type="submit">';
   $output.='</form>';
