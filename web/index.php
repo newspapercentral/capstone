@@ -24,10 +24,6 @@ $app->get('/', function() use($app) {
 
 
 //START MY CODE HERE
-$app->get('/register/', function() use($app) {
-  return $app['twig']->render('index.twig');
-});
-
 //DB Tutorial
 $dbopts = parse_url(getenv('DATABASE_URL'));
 $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
@@ -60,12 +56,16 @@ $app->get('/db/', function() use($app) {
 });
 
 //Add new handler to insert into database
-$app->post('/submitUser/', function() use($app) {
+$app->post('/register/', function() use($app) {
   $st = $app['pdo']->prepare('INSERT INTO user_table values (?,?,\'blablabla\',\'blablabla\') ');
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
   $st->execute();
   return $app['twig']->render('index.twig');
+});
+
+$app->post('/login/', function() use($app) {
+    echo 'log in will go here';
 });
 
 // END MY CODE HERE
