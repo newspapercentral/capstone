@@ -86,5 +86,9 @@ $app->get('/inbox/', function() use($app) {
     return $app['twig']->render('message.twig');
 });
 
+$app->get('/inbox/login', function() use($app) {
+    return $app['twig']->render('index.twig');
+});
+
 // END MY CODE HERE
 $app->run();
