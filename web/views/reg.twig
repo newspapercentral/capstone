@@ -1,12 +1,25 @@
 {% extends "layout.html" %}
 
 {% block content %}
-	<form action="../submitUser" method="post">
-		Username: <input type="text" name="username"><br>
-		Password: <input type="password" name="password"><br>
-		Confirm Password:<input type="password" name="password2"><br>
-		Security Question: "What was your first dog's name?" <br>
-		Answer: <input type="text" name="securityAnswer"> <br>
-		<input type="submit">
-	</form>
+	<div>
+		<form action="register" method="post">
+			Username: <input type="text" name="username"><br>
+			Password: <input type="password" name="password"><br>
+			Confirm Password:<input type="password" name="password2"><br>
+			Security Question: "What was your first dog's name?" <br>
+			Answer: <input type="text" name="securityAnswer"> <br>
+			<input type="submit">
+		</form>
+	</div>
+	<div>
+		<form action="login" method="post">
+			Username: <input type="text" name="username"><br>
+			Password: <input type="password" name="password"><br>
+			Confirm Password:<input type="password" name="password2"><br>
+			Security Question: "What was your first dog's name?" <br>
+			Answer: <input type="text" name="securityAnswer"> <br>
+			<input type="submit">
+		</form>
+	</div>
+	
 {% endblock %}
