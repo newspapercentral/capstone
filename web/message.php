@@ -78,7 +78,7 @@ $app->post('/send', function(Request $request) use($app) {
 //   }   
 });
 
-$app->get('/inbox/login', function() use($app) {
+$app->get('/inbox/login/', function() use($app) {
     return $app['twig']->render('index.twig');
     
 });
