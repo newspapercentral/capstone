@@ -16,4 +16,23 @@
 			<input type="submit">
 		</form>
 	</div>
+	
+	<div class="login-form">
+    <form action="send" method="post">
+        <h2 class="text-center">Send a New Message</h2>       
+        <div class="form-group">
+			<input type="hidden" name="from" value="test">			
+            <input type="text" class="form-control" placeholder="Send To" required="required" name="to" maxlength="20" pattern="[A-Za-z0-9]{3,}">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Subject" required="required" name="subject" maxlength="20" pattern="[A-Za-z0-9]{3,}">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Type your message here...(Max 140 characters)" required="required" name="message" maxlength="140" pattern="[A-Za-z0-9]{1,}">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </div>     
+    </form>
+	</div>
 {% endblock %}

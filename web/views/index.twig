@@ -2,13 +2,14 @@
 
 {% block content %}	
 	<div class="login-form">
+	<label>All input must be between 3-20 characters and contain only letters and numbers</label>
     <form action="login" method="post">
         <h2 class="text-center">Log in</h2>       
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Username" required="required" name="username" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="text" class="form-control" placeholder="Username" required="required" name="username" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" placeholder="Password" required="required" name="password" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="password" class="form-control" placeholder="Password" required="required" name="password" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
@@ -20,16 +21,16 @@
     <form action="register" method="post">
         <h2 class="text-center">Create New Account</h2>       
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Username" required="required" name="username" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="text" class="form-control" placeholder="Username" required="required" name="username" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" placeholder="Password" required="required" name="password" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="password" class="form-control" placeholder="Password" required="required" name="password" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
             <label>What was your first dog's name?</label>
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" placeholder="Security Answer" required="required" name="securityAnswer" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="password" class="form-control" placeholder="Security Answer" required="required" name="securityAnswer" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
@@ -41,13 +42,13 @@
     <form action="reset" method="post">
         <h2 class="text-center">Forgot Password</h2>       
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Username" required="required" name="username" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="text" class="form-control" placeholder="Username" required="required" name="username" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
             <label>What was your first dog's name?</label>
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" placeholder="Security Answer" required="required" name="securityAnswer" maxlength="20" pattern="[A-Za-z0-9]{3}">
+            <input type="password" class="form-control" placeholder="Security Answer" required="required" name="securityAnswer" maxlength="20" pattern="[A-Za-z0-9]{3,}">
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Submit</button>
