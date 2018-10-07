@@ -44,8 +44,9 @@ $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider
 );
 
 //Add new handler to query database
-$app->get('/db/user', function() use($app) {
-  $st = $app['pdo']->prepare('SELECT * FROM user_table');
+$app->get('/db/{table}', function($table) use($app) {
+  $full_table_name = $table . '_table';
+  $st = $app['pdo']->prepare('SELECT * FROM ' . $full_table_name);
   $st->execute();
 
   $data = array();
