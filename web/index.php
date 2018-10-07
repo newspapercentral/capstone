@@ -102,11 +102,20 @@ $app->post('/inbox/send', function(Request $request) use($app) {
     }
 });
 
-$app->post('/login', function() use($app) {
-    return 'log in will go here';
+$app->post('/login', function(Request $request) use($app) {
+    $username = $request->get('username');
+    $password = $request->get('password');
+    return $app->redirect('/inbox/');
     
 });
 
+$app->post('/reset', function(Request $request) use($app) {
+    $username = $request->get('username');
+    $secAnswer = $request->get('securityAnswer');
+    return $app->redirect('/');
+    
+});
+    
 $app->get('/inbox/', function() use($app) {
     return $app['twig']->render('message.twig');
 });
