@@ -134,7 +134,21 @@ $app->post('/login', function(Request $request) use($app) {
     
     if($hash !== '' && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
+        $app['monolog']->addDebug(updateBadAttempts($username, 'bad'));
         //TODO need to reset table for bad attempts
+        
+        //TODO select messages from here now that we have authenticated and pass them to inbox
+//         $data = array();
+//         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+//             //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
+//             $data[] = implode("," , $row);
+//         }
+        
+//         return $app['twig']->render('database.twig', array(
+//             'data' => $data
+//         ));
+        
+        
         return $app->redirect('/inbox/');
     }else{
         $app['monolog']->addDebug('USER IS DENIED');
@@ -158,6 +172,12 @@ $app->get('/inbox/', function() use($app) {
 $app->get('/inbox/login', function() use($app) {
     return $app->redirect('../../');
 });
+
+
+//Utility Functions
+    function updateBadAttempts($user, $bad_attempt){
+        return 'it worked for ' . $user . ' , ' . $bad_attempt;
+    }
 
 // END MY CODE HERE
 $app->run();
