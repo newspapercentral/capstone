@@ -114,20 +114,18 @@ $app->post('/login', function(Request $request) use($app) {
     $password = $request->get('password');
     $app['monolog']->addDebug('Username: ' . $username . "; Password: " . $password);
     
-    //Select user record from user_table
-    //select date_part('hour' , age(CURRENT_TIMESTAMP, '2018-10-9'));
+    $app['monolog']->addDebug('SELECT password, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=' . $username .';');
     
+    //Select user record from user_table
     $st = $app['pdo']->prepare('SELECT password, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=?;');
     $st->bindValue(1, $username, PDO::PARAM_STR);
     $st->execute();
-    $app['monolog']->addDebug('Executed SELECT statement');
     
     //extract hashed password from table
     $hash='';
     $bad_attempts=0;
     $last_login_tm='';
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('data: ' . $row['password']);
         $hash = $row['password'];
         $bad_attempts=$row['bad_attempts'];
         $last_login_tm=$row['age'];
@@ -140,7 +138,7 @@ $app->post('/login', function(Request $request) use($app) {
     $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
     
-    if($hash !== '' && ($badAttempts <= 3 || $num_hours > 5) && password_verify($password, $hash)){
+    if($hash !== '' && ($badAttempts <= 3 || $last_login_tm) && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
