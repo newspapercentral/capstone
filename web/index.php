@@ -65,16 +65,15 @@ $app->post('/register', function(Request $request) use($app) {
   
   $username = $request->get('username');
   $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
-
-  $app['monolog']->addDebug('Veryify ' . password_verify($request->get('password'), $password));
-  $app['monolog']->addDebug('Bad Password ' . password_verify('not the password', $password));
-  
   $securityAnswer = password_hash($request->get('securityAnswer'), PASSWORD_DEFAULT);  
   
   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'What is the name of your best friend?', ?);");
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
   $st->bindValue(3, $securityAnswer, PDO::PARAM_STR);
+  
+  $app['monolog']->addDebug('Veryify ' . password_verify($request->get('password'), $password));
+  $app['monolog']->addDebug('Bad Password ' . password_verify('not the password', $password));
   
   if($st->execute()){
       //INSERT worked
@@ -97,7 +96,7 @@ $app->post('/inbox/send', function(Request $request) use($app) {
     $st->bindValue(1, $message_id, PDO::PARAM_STR);
     $st->bindValue(2, $to, PDO::PARAM_STR);
     $st->bindValue(3, $from, PDO::PARAM_STR);
-    $st->bindValue(4, subject, PDO::PARAM_STR);
+    $st->bindValue(4, $subject, PDO::PARAM_STR);
     $st->bindValue(5, $message, PDO::PARAM_STR);
     
     if($st->execute()){
@@ -112,6 +111,25 @@ $app->post('/inbox/send', function(Request $request) use($app) {
 $app->post('/login', function(Request $request) use($app) {
     $username = $request->get('username');
     $password = $request->get('password');
+    $app['monolog']->addDebug('Username: ' . $username . "; Password: " . $password);
+    
+    $st = $app['pdo']->prepare('SELECT user_nm, password from user_table WHERE user_nm=?;');
+    $st->bindValue(1, $username, PDO::PARAM_STR);
+    $st->execute();
+    $app['monolog']->addDebug('Executed SELECT statement');
+    
+    
+    $data = array();
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('data: ' . implode("," , $row));
+        $data[] = implode("," , $row);
+    }
+    
+    //$hash = password_hash($password, PASSWORD_DEFAULT);
+    
+    //if(password_verify($password, $hash)){
+        
+    //}
     return $app->redirect('/inbox/');
     
 });
