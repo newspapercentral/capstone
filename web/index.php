@@ -134,10 +134,11 @@ $app->post('/login', function(Request $request) use($app) {
     $app['monolog']->addDebug('$hash=' . $hash);
     $app['monolog']->addDebug('$$bad_attempts=' . $bad_attempts);
     $app['monolog']->addDebug('$last_login_tm=' . $last_login_tm);
-    
     $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
-    
+    //PreValidate: Need to get a row in the database
+    //     * (bad_attempts <= 3 OR logged in more than 5 hours ago)
+    //Validate: Password hash matches hash in the database
     if($hash !== '' && ($badAttempts <= 3 || $last_login_tm) && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
@@ -145,20 +146,26 @@ $app->post('/login', function(Request $request) use($app) {
         $st->execute();
         
         $app['monolog']->addDebug('Reset bad attempts to 0');
-        //TODO select messages from here now that we have authenticated and pass them to inbox
-//         $data = array();
-//         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-//             //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
-//             $data[] = implode("," , $row);
-//         }
         
-//         return $app['twig']->render('database.twig', array(
-//             'data' => $data
-//         ));
+        $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=?;');
+        $st->bindValue(1, $username, PDO::PARAM_STR);
+        $st->execute();
+        
+         $data = array();
+         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
+             $data[] = $row;
+             
+        }
+        
+        return $app['twig']->render('message.twig', array(
+            'data' => $data
+        ));
         
         
-        return $app->redirect('/inbox/');
+        //return $app->redirect('/inbox/');
     }else{
+        //Invalid User
         $app['monolog']->addDebug('USER IS DENIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +1, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
