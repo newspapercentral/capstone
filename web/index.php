@@ -84,15 +84,15 @@ $app->post('/register', function(Request $request) use($app) {
   }   
 });
 
-$app->post('/inbox/send', function(Request $request) use($app) {
-    
+$app->post('/send', function(Request $request) use($app) {
+    //TODO figure out how to determine from field
     $to = $request->get('to');
-    $from = $request->get('from');
+    //$from = $request->get('from');
     $subject =  $request->get('subject');
     $message  = $request->get('message');
     $message_id = $from . time();
     
-    $st = $app['pdo']->prepare("INSERT INTO message_table (message_id, to_id, from_id, subject, text) values (?,?,?,?,?);");
+    $st = $app['pdo']->prepare("INSERT INTO message_table (to_id, from_id, subject, text) values (?,'acv',?,?);");
     $st->bindValue(1, $message_id, PDO::PARAM_STR);
     $st->bindValue(2, $to, PDO::PARAM_STR);
     $st->bindValue(3, $from, PDO::PARAM_STR);
