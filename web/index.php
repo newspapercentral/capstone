@@ -113,7 +113,7 @@ $app->post('/login', function(Request $request) use($app) {
     $password = $request->get('password');
     $app['monolog']->addDebug('Username: ' . $username . "; Password: " . $password);
     
-    $st = $app['pdo']->prepare('SELECT user_nm, password from user_table WHERE user_nm=?;');
+    $st = $app['pdo']->prepare('SELECT password from user_table WHERE user_nm=?;');
     $st->bindValue(1, $username, PDO::PARAM_STR);
     $st->execute();
     $app['monolog']->addDebug('Executed SELECT statement');
@@ -121,8 +121,8 @@ $app->post('/login', function(Request $request) use($app) {
     
     $data = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('data: ' . implode("," , $row));
-        $data[] = implode("," , $row);
+        $app['monolog']->addDebug('data: ' . $row['password']);
+        $data[] = implode("," , $row['password']);
     }
     
     //$hash = password_hash($password, PASSWORD_DEFAULT);
