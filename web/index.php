@@ -101,10 +101,14 @@ $app->post('/send', function(Request $request) use($app) {
     
     if($st->execute()){
         //INSERT worked
-        return $app['twig']->render('message.twig');
+        return $app['twig']->render('message.twig', array(
+            'data' => $data
+        ));
     }else{
         //INSERT failed
-        return $app['twig']->render('message.twig');
+        return $app['twig']->render('message.twig', array(
+            'data' => $data
+        ));
     }
 });
 
