@@ -132,8 +132,10 @@ $app->post('/login', function(Request $request) use($app) {
     
     if($hash !== '' && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
-        //TODO need to reset table for bad attempts
-        updateBadAttempts($username, false);
+        $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0 WHERE user_nm=?;');
+        $st->bindValue(1, $user, PDO::PARAM_STR);
+        $st->execute();
+        $app['monolog']->addDebug('Reset bad attempts to 0');
         //TODO select messages from here now that we have authenticated and pass them to inbox
 //         $data = array();
 //         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
@@ -149,28 +151,13 @@ $app->post('/login', function(Request $request) use($app) {
         return $app->redirect('/inbox/');
     }else{
         $app['monolog']->addDebug('USER IS DENIED');
-        updateBadAttempts($username, true);
-        //TODO need to update table for bad attempts
+        $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +1 WHERE user_nm=?;');
+        $st->bindValue(1, $user, PDO::PARAM_STR);
+        $st->execute();
+        $app['monolog']->addDebug('Incremented bad attempts');
+
         return $app->redirect('../?success=false');
     }
-    
-    //Utility Functions (Inside Verify)
-    function updateBadAttempts($user, $bad_attempt){
-        //TODO reset timer to prevent logins for a day
-        if($bad_attempt){
-            $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +1 WHERE user_nm=?;');
-            $st->bindValue(1, $user, PDO::PARAM_STR);
-            $st->execute();
-            $app['monolog']->addDebug('Incremented bad attempts');
-        }else{
-            $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0 WHERE user_nm=?;');
-            $st->bindValue(1, $user, PDO::PARAM_STR);
-            $st->execute();
-            $app['monolog']->addDebug('Reset bad attempts to 0');
-        }
-    }
-    
-    
     
 });
 
