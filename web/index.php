@@ -64,9 +64,12 @@ $app->get('/db/{table}', function($table) use($app) {
 $app->post('/register', function(Request $request) use($app) {
   
   $username = $request->get('username');
-  $password = password_hash($request->get('password'), PASSWORD_DEFAULT);  
-  $securityAnswer = $request->get('securityAnswer');
-  //$securityAnswer = password_hash($request->get('securityAnswer'), PASSWORD_DEFAULT);  
+  $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
+
+  $app['monolog']->addDebug('Veryify ' . password_verify($request->get('password'), $password));
+  $app['monolog']->addDebug('Bad Password ' . password_verify('not the password', $password));
+  
+  $securityAnswer = password_hash($request->get('securityAnswer'), PASSWORD_DEFAULT);  
   
   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'What is the name of your best friend?', ?);");
   $st->bindValue(1, $username, PDO::PARAM_STR);
