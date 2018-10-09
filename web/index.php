@@ -163,6 +163,8 @@ $app->post('/login', function(Request $request) use($app) {
         }
         
         return $app['twig']->render('message.twig', array(
+            'username'=> $username,
+            'password'=> $password,
             'data' => $data
         ));
         
