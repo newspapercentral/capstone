@@ -139,7 +139,7 @@ $app->post('/login', function(Request $request) use($app) {
     }else{
         $app['monolog']->addDebug('USER IS DENIED');
         //TODO need to update table for bad attempts
-        return $app->redirect('../login?success=true');
+        return $app->redirect('?success=false');
     }
     
 });
