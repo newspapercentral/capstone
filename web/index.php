@@ -109,28 +109,37 @@ $app->post('/inbox/send', function(Request $request) use($app) {
 });
 
 $app->post('/login', function(Request $request) use($app) {
+    //Get parameters from UI
     $username = $request->get('username');
     $password = $request->get('password');
     $app['monolog']->addDebug('Username: ' . $username . "; Password: " . $password);
     
+    //Select user record from user_table
     $st = $app['pdo']->prepare('SELECT password from user_table WHERE user_nm=?;');
     $st->bindValue(1, $username, PDO::PARAM_STR);
     $st->execute();
     $app['monolog']->addDebug('Executed SELECT statement');
     
-    
+    //extract hashed password from table
     $data = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('data: ' . $row['password']);
         $data[] = implode("," , $row['password']);
     }
     
-    //$hash = password_hash($password, PASSWORD_DEFAULT);
+    $app['monolog']->addDebug('count($data)' . count($data));
+    $app['monolog']->addDebug('$data[0]' . $data[0]);
+    $app['monolog']->addDebug('password_verify($password, $data[0])' . password_verify($password, $data[0]));
     
-    //if(password_verify($password, $hash)){
-        
-    //}
-    return $app->redirect('/inbox/');
+    if(count($data) == 1 && password_verify($password, $data[0])){
+        $app['monolog']->addDebug('USER IS VERIFIED');
+        //TODO need to reset table for bad attempts
+        return $app->redirect('/inbox/');
+    }else{
+        $app['monolog']->addDebug('USER IS DENIED');
+        //TODO need to update table for bad attempts
+        return $app->redirect('/login?denied=true');
+    }
     
 });
 
