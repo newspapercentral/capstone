@@ -122,23 +122,24 @@ $app->post('/login', function(Request $request) use($app) {
     
     //extract hashed password from table
     $data = array();
+    $hash='';
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('data: ' . $row['password']);
         $data[] = implode("," , $row['password']);
+        $hash = $row['password'];
     }
     
-    $app['monolog']->addDebug('count($data)' . count($data));
-    $app['monolog']->addDebug('$data[0]' . $data[0]);
+    $app['monolog']->addDebug('$hash' . $hash);
     $app['monolog']->addDebug('password_verify($password, $data[0])' . password_verify($password, $data[0]));
     
-    if(count($data) == 1 && password_verify($password, $data[0])){
+    if($hash !== '' && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         //TODO need to reset table for bad attempts
         return $app->redirect('/inbox/');
     }else{
         $app['monolog']->addDebug('USER IS DENIED');
         //TODO need to update table for bad attempts
-        return $app->redirect('/login?denied=true');
+        return $app->redirect('../login?success=true');
     }
     
 });
