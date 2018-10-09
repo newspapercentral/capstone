@@ -71,7 +71,8 @@ $app->post('/register', function(Request $request) use($app) {
   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'What is the name of your best friend?', ?);");
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
-  $st->bindValue(2, $securityAnswer, PDO::PARAM_STR);
+  $st->bindValue(3, $securityAnswer, PDO::PARAM_STR);
+  
   if($st->execute()){
       //INSERT worked
       return $app->redirect('../?success=true');
