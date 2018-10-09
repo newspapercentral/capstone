@@ -101,10 +101,10 @@ $app->post('/send', function(Request $request) use($app) {
     
     if($st->execute()){
         //INSERT worked
-        return $app->redirect('../inbox?success=true');
+        return $app['twig']->render('message.twig');
     }else{
         //INSERT failed
-        return $app->redirect('../inbox?success=fail');
+        return $app['twig']->render('message.twig');
     }
 });
 
