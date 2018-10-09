@@ -121,11 +121,9 @@ $app->post('/login', function(Request $request) use($app) {
     $app['monolog']->addDebug('Executed SELECT statement');
     
     //extract hashed password from table
-    $data = array();
     $hash='';
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('data: ' . $row['password']);
-        $data[] = implode("," , $row['password']);
         $hash = $row['password'];
     }
     
@@ -156,6 +154,24 @@ $app->post('/login', function(Request $request) use($app) {
         return $app->redirect('../?success=false');
     }
     
+    //Utility Functions (Inside Verify)
+    function updateBadAttempts($user, $bad_attempt){
+        //TODO reset timer to prevent logins for a day
+        if($bad_attempt){
+            $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +1 WHERE user_nm=?;');
+            $st->bindValue(1, $user, PDO::PARAM_STR);
+            $st->execute();
+            $app['monolog']->addDebug('Incremented bad attempts');
+        }else{
+            $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0 WHERE user_nm=?;');
+            $st->bindValue(1, $user, PDO::PARAM_STR);
+            $st->execute();
+            $app['monolog']->addDebug('Reset bad attempts to 0');
+        }
+    }
+    
+    
+    
 });
 
 $app->post('/reset', function(Request $request) use($app) {
@@ -172,23 +188,6 @@ $app->get('/inbox/', function() use($app) {
 $app->get('/inbox/login', function() use($app) {
     return $app->redirect('../../');
 });
-
-
-//Utility Functions
-    function updateBadAttempts($user, $bad_attempt){
-        //TODO reset timer to prevent logins for a day
-        if($bad_attempt){
-            $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +1 WHERE user_nm=?;');
-            $st->bindValue(1, $user, PDO::PARAM_STR);
-            $st->execute();
-            $app['monolog']->addDebug('Incremented bad attempts');
-        }else{
-            $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0 WHERE user_nm=?;');
-            $st->bindValue(1, $user, PDO::PARAM_STR);
-            $st->execute();
-            $app['monolog']->addDebug('Reset bad attempts to 0');
-        }
-    }
 
 // END MY CODE HERE
 $app->run();
