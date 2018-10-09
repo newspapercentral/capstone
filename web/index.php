@@ -64,7 +64,7 @@ $app->get('/db/{table}', function($table) use($app) {
 $app->post('/register', function(Request $request) use($app) {
   
   $username = $request->get('username');
-  $password = crypt($request->get('password'));  
+  $password = password_hash($request->get('password'), PASSWORD_DEFAULT);  
     
   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values (?,?,'semi123', 'semi1234');");
   $st->bindValue(1, $username, PDO::PARAM_STR);
