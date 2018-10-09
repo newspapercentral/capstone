@@ -133,7 +133,7 @@ $app->post('/login', function(Request $request) use($app) {
     if($hash !== '' && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0 WHERE user_nm=?;');
-        $st->bindValue(1, $user, PDO::PARAM_STR);
+        $st->bindValue(1, $username, PDO::PARAM_STR);
         $st->execute();
         $app['monolog']->addDebug('Reset bad attempts to 0');
         //TODO select messages from here now that we have authenticated and pass them to inbox
@@ -152,7 +152,7 @@ $app->post('/login', function(Request $request) use($app) {
     }else{
         $app['monolog']->addDebug('USER IS DENIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +1 WHERE user_nm=?;');
-        $st->bindValue(1, $user, PDO::PARAM_STR);
+        $st->bindValue(1, $username, PDO::PARAM_STR);
         $st->execute();
         $app['monolog']->addDebug('Incremented bad attempts');
 
