@@ -3,7 +3,7 @@
 {% block content %}
 	<ul>
 	{% for d in data %}
-	  <li> {{ d }} </li>
+	  <li> {{ d.to_id }} </li>
 	{% else %}
 	  <li>No messages!</li>
 	{% endfor %}
