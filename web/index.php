@@ -117,14 +117,14 @@ $app->post('/login', function(Request $request) use($app) {
     //Select user record from user_table
     //select date_part('hour' , age(CURRENT_TIMESTAMP, '2018-10-9'));
     
-    $st = $app['pdo']->prepare('SELECT password, bad_attempts, last_login_tm from user_table WHERE user_nm=?;');
+    $st = $app['pdo']->prepare('SELECT password, bad_attempts, age(last_login_tm, CURRENT_TIMESTAMP) FROM user_table WHERE user_nm=?;');
     $st->bindValue(1, $username, PDO::PARAM_STR);
     $st->execute();
     $app['monolog']->addDebug('Executed SELECT statement');
     
     //extract hashed password from table
     $hash='';
-    $bad_attempts='';
+    $bad_attempts=0;
     $last_login_tm='';
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('data: ' . $row['password']);
@@ -138,7 +138,8 @@ $app->post('/login', function(Request $request) use($app) {
     $app['monolog']->addDebug('$last_login_tm' . $last_login_tm);
     $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
-    if($hash !== '' && password_verify($password, $hash)){
+    
+    if($hash !== '' && ($badAttempts <= 3 || $num_hours > 5) && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
