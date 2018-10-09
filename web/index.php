@@ -117,7 +117,7 @@ $app->post('/login', function(Request $request) use($app) {
     //Select user record from user_table
     //select date_part('hour' , age(CURRENT_TIMESTAMP, '2018-10-9'));
     
-    $st = $app['pdo']->prepare('SELECT password, bad_attempts, age(last_login_tm, CURRENT_TIMESTAMP) FROM user_table WHERE user_nm=?;');
+    $st = $app['pdo']->prepare('SELECT password, bad_attempts, (age(CURRENT_TIMESTAMP, last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=?;');
     $st->bindValue(1, $username, PDO::PARAM_STR);
     $st->execute();
     $app['monolog']->addDebug('Executed SELECT statement');
@@ -130,12 +130,14 @@ $app->post('/login', function(Request $request) use($app) {
         $app['monolog']->addDebug('data: ' . $row['password']);
         $hash = $row['password'];
         $bad_attempts=$row['bad_attempts'];
-        $last_login_tm=$row['last_login_tm'];
+        $last_login_tm=$row['age'];
     }
     
     $app['monolog']->addDebug('$hash' . $hash);
     $app['monolog']->addDebug('$$bad_attempts' . $bad_attempts);
     $app['monolog']->addDebug('$last_login_tm' . $last_login_tm);
+    $app['monolog']->addDebug('type: $last_login_tm' . gettype($last_login_tm));
+    
     $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
     
