@@ -129,8 +129,8 @@ $app->post('/login', function(Request $request) use($app) {
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('data: ' . $row['password']);
         $hash = $row['password'];
-        $bad_attempts='bad_attempts';
-        $last_login_tm='last_login_tm';
+        $bad_attempts=$row['bad_attempts'];
+        $last_login_tm=$row['last_login_tm'];
     }
     
     $app['monolog']->addDebug('$hash' . $hash);
