@@ -130,7 +130,7 @@ $app->post('/login', function(Request $request) use($app) {
     }
     
     $app['monolog']->addDebug('$hash' . $hash);
-    $app['monolog']->addDebug('password_verify($password, $data[0])' . password_verify($password, $data[0]));
+    $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
     if($hash !== '' && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
