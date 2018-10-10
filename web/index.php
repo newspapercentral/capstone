@@ -291,9 +291,8 @@ $app->get('/inbox/', function() use($app) {
         
         $data = array();
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            $data[] = $row;
             
-            $secret_iv = $public_key . 'iv';
+            $secret_iv = $secret_key . 'iv';
             $encrypt_method = "AES-256-CBC";
             $key = hash( 'sha256', $secret_key );
             $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
@@ -306,7 +305,9 @@ $app->get('/inbox/', function() use($app) {
             $output = openssl_decrypt( base64_decode( $row['text'] ), $encrypt_method, $key, 0, $iv );
             $app['monolog']->addDebug('DECRYPT' . $output);
             
-            //$data['text'] = $output;
+            $row['text'] = $output;
+            $data[] = $row;
+            
         }
         
         $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
