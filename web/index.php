@@ -171,7 +171,9 @@ $app->post('/login', function(Request $request) use($app) {
              
         }
         
-        $this->get('session')->set('user', 'superuser');
+        $app['session']->set('user', 'superuser');
+        $app['monolog']->addDebug('set user in session');
+        
         
         return $app['twig']->render('message.twig', array(
             'username'=> $username,
