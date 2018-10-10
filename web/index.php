@@ -142,7 +142,7 @@ $app->post('/login', function(Request $request) use($app) {
     }
     
     $test='initial value';
-    if($last_login_tm){
+    if($last_login_tm === true){
         $test='true';
     }else{
         $true='false';
