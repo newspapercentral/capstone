@@ -256,7 +256,7 @@ $app->post('/reset/send', function(Request $request) use($app) {
         $app['session']->set('user', $username);
         $app['monolog']->addDebug('Set session user to ' . $username);
         
-        return $app->redirect('/inbox/');
+        return $app->redirect('/');
     }else{
         //Invalid User - set bad attempts > 3 for higher threshold of security
         $app['monolog']->addDebug('USER IS DENIED');
