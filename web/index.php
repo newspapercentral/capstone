@@ -31,7 +31,10 @@ $app->get('/', function() use($app) {
   return $app['twig']->render('index.twig');
 });
 
-
+$app->get('/login', function() use($app) {
+    $app['session']->set('user', '');//reset authentication
+    return $app['twig']->render('login.twig');
+});
 //START MY CODE HERE
 //DB Tutorial
 $dbopts = parse_url(getenv('DATABASE_URL'));
@@ -150,7 +153,7 @@ $app->post('inbox/send', function(Request $request) use($app) {
     }
 });
 
-$app->post('/login', function(Request $request) use($app) {
+$app->post('/login/send', function(Request $request) use($app) {
     $username = $request->get('username');
     $password = $request->get('password');
     $app['monolog']->addDebug('Username: ' . $username . "; Password: " . $password);
