@@ -111,8 +111,8 @@ $app->post('inbox/send', function(Request $request) use($app) {
     
     $data = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('PUBLIC KEY ' . pg_unescape_bytea($row['public_key']));
-        $data[] = pg_unescape_bytea($row['public_key']);
+        $app['monolog']->addDebug('PUBLIC KEY ' . pg_unescape_bytea(base64_encode($row['public_key'])));
+        $data[] = pg_unescape_bytea(base64_encode($row['public_key']));
     }
     
     $app['monolog']->addDebug('INSERT INTO message_table (to_id, from_id, subject, text) values ('. $to . ',' . $from . ',' . $subject .',' . $message. ');');
