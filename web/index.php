@@ -78,7 +78,7 @@ $app->post('/register', function(Request $request) use($app) {
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
   $st->bindValue(3, $securityAnswer, PDO::PARAM_STR);
-  $st->bindValue(4, $public_key, PDO::PARAM_STR);
+  $st->bindValue(4, $public_key, PDO::PARAM_LOB);
   
   if($st->execute()){
       //INSERT worked
