@@ -27,7 +27,7 @@ $app->register(new Silex\Provider\SessionServiceProvider());
 // Our web handlers
 
 $app->get('/', function() use($app) {
-  $app['monolog']->addDebug('logging output.');
+  $app['session']->set('user', '');//reset authentication
   return $app['twig']->render('index.twig');
 });
 
@@ -166,29 +166,13 @@ $app->post('/login', function(Request $request) use($app) {
         $st->execute();
         
         $app['monolog']->addDebug('Reset bad attempts to 0');
+        //set the session ID
+        $app['session']->set('user', $username);
         
-        $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=?;');
-        $st->bindValue(1, $username, PDO::PARAM_STR);
-        $st->execute();
-        
-         $data = array();
-         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
-             $data[] = $row;
-             
-        }
-        
-        $app['session']->set('user', 'super-user');
+     
         
         
-        return $app['twig']->render('message.twig', array(
-            'username'=> $username,
-            'password'=> $password,
-            'data' => $data
-        ));
-        
-        
-        //return $app->redirect('/inbox/');
+        return $app->redirect('/inbox/');
     }else{
         //Invalid User
         $app['monolog']->addDebug('USER IS DENIED');
@@ -210,7 +194,26 @@ $app->post('/reset', function(Request $request) use($app) {
 });
     
 $app->get('/inbox/', function() use($app) {
-    return $app['twig']->render('message.twig');
+    
+    $username = $app['session']->get('user');
+    if($username !== ''){
+        return $app->redirect('../');//go back to login
+    }else{
+        $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=?;');
+        $st->bindValue(1, $username, PDO::PARAM_STR);
+        $st->execute();
+        
+        $data = array();
+        while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
+            $data[] = $row;
+            
+        }
+ 
+        return $app['twig']->render('message.twig', array(
+            'data' => $data
+        ));
+    }
 });
 
 $app->get('/inbox/login', function() use($app) {
