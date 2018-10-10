@@ -1,7 +1,23 @@
 {% extends "layout.html" %}
 
 {% block content %}	
-	<a href="/login">Login</a>
-	<a href="/reset">Reset</a>
-	<a href="/register">Register</a>
+	<h2>Welcome to the Simple Email System</h2>
+	<h3> Please read the following options</h3>
+	<ol>
+		<li> <a href="/register">Register</a> if you are a new user</li>
+		<li> <a href="/login">Login</a> if you already have an account </li>
+		<li> <a href="/reset">Reset</a> if you forgot your password </li>
+	</ol>
+	
+	
+	
+	<h3>Security Overview</h3>
+	<ul>
+		<li> Password Hashing </li>
+		<li> Session variable </li>
+		<li> Encrypted messages </li>
+		<li> Bad attempt counter </li>
+		<li> Password reset </li>
+		<li> Password requirements </li>
+	</ul>
 {% endblock %}
