@@ -92,7 +92,10 @@ $app->post('/register', function(Request $request) use($app) {
 
 $app->post('/send', function(Request $request) use($app) {
     //TODO figure out how to determine from field
-    $ses = $request->getSession();
+    $ses = $app->getSession();
+    $app['monolog']->addDebug('APP' . $app);
+    $app['monolog']->addDebug('session' . $ses);
+    
     $app['monolog']->addDebug('USER-SESSION' . $ses->get('user'));
     
     $to = $request->get('to');
