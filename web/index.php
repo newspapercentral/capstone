@@ -215,6 +215,7 @@ $app->get('/inbox/', function() use($app) {
         }
  
         return $app['twig']->render('message.twig', array(
+            'username' => $username,
             'data' => $data
         ));
     }

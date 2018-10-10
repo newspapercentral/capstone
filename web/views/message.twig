@@ -2,7 +2,6 @@
 
 {% block content %}
 	<label>Username:{{username}}</label>
-	<label>Password:{{password}}</label>
 	<ul>
 	{% for d in data %}
 	  <li> From: {{ d.from_id }} ({{d.subject}}): {{d.text}} </li>
