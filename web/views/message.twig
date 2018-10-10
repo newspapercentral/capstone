@@ -6,7 +6,7 @@
     <form action="send" method="post">
         <h2 class="text-center">Send a New Message</h2>       
         <div class="form-group">
-        	<label>Send To:</label><select name="to">
+        	<label>Send To:</label><select class="custom-select" width="200px" name="to">
         	{% for u in user_list %}
         		<option value="{{u.user_nm}}">{{u.user_nm}}</option>
         	{% else %}
