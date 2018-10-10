@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 $session = new Session();
 $session->start();
+$session->set('user', 'superuser');
+
 //END My ADD
 
 // Register the monolog logging service
@@ -175,8 +177,8 @@ $app->post('/login', function(Request $request) use($app) {
              
         }
         
-        $session->set('user', 'superuser');
-        $app['monolog']->addDebug('set user in session');
+        //$session->set('user', 'superuser');
+        //$app['monolog']->addDebug('set user in session');
         
         
         return $app['twig']->render('message.twig', array(
