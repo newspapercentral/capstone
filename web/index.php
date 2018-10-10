@@ -119,6 +119,8 @@ $app->post('inbox/send', function(Request $request) use($app) {
         $key = hash( 'sha256', $secret_key );
         $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
         
+        $app['monolog']->addDebug('base64_encode( openssl_encrypt(' . $message .', ' . $encrypt_method . ',' . $key . ', 0, ' . $iv . ' ) );');
+        
         $output = base64_encode( openssl_encrypt( $message, $encrypt_method, $key, 0, $iv ) );
         $app['monolog']->addDebug('ENCCRYPT' . $output);
         
@@ -298,6 +300,8 @@ $app->get('/inbox/', function() use($app) {
 
             $app['monolog']->addDebug('row[\'text\']' . $row['text']);
             $app['monolog']->addDebug('data[\'text\']' . $data['text']);
+            
+            $app['monolog']->addDebug('openssl_decrypt( base64_decode(' . $row['text'] .' ),' . $encrypt_method . ',' . $key . ', 0,'. $iv . ');');
             
             $output = openssl_decrypt( base64_decode( $row['text'] ), $encrypt_method, $key, 0, $iv );
             $app['monolog']->addDebug('DECRYPT' . $output);
