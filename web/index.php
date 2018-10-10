@@ -179,11 +179,11 @@ $app->post('/reset', function(Request $request) use($app) {
     //TODO update db for this post
     $username = $request->get('username');
     $secAnswer = $request->get('securityAnswer');
-    $password = $request->get('password');
+    password_hash($request->get('password'), PASSWORD_DEFAULT);
     
     
     //start
-    $app['monolog']->addDebug('SELECT security_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=' . $username .';');
+    $app['monolog']->addDebug('SELECT sec_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=' . $username .';');
     
     //Select user record from user_table
     $st = $app['pdo']->prepare('SELECT sec_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=?;');
@@ -210,7 +210,7 @@ $app->post('/reset', function(Request $request) use($app) {
     //Validate: Password hash matches hash in the database
     if($hash !== '' && ($bad_attempts <= 3 || $last_login_tm === true) && password_verify($secAnswer, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
-        $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, password=? last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
+        $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, password=?, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $password, PDO::PARAM_STR);
         $st->bindValue(2, $username, PDO::PARAM_STR);
         $st->execute();
