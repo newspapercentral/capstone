@@ -7,6 +7,10 @@ $app['debug'] = true;
 
 //My ADD
 use Symfony\Component\HttpFoundation\Request; 
+use Symfony\Component\HttpFoundation\Session\Session;
+
+$session = new Session();
+$session->start();
 //END My ADD
 
 // Register the monolog logging service
@@ -86,7 +90,7 @@ $app->post('/register', function(Request $request) use($app) {
 
 $app->post('/send', function(Request $request) use($app) {
     //TODO figure out how to determine from field
-    $app['monolog']->addDebug('USER-SESSION' . $app.session.get('user'));
+    $app['monolog']->addDebug('USER-SESSION' . $session->get('user'));
     
     $to = $request->get('to');
     //$from = $request->get('from');
@@ -171,7 +175,7 @@ $app->post('/login', function(Request $request) use($app) {
              
         }
         
-        $app['session']->set('user', 'superuser');
+        $session->set('user', 'superuser');
         $app['monolog']->addDebug('set user in session');
         
         
