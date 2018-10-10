@@ -107,6 +107,8 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $app['monolog']->addDebug('SELECT public_key FROM user_table where user_nm=' . $to .';');
     $st = $app['pdo']->prepare("SELECT public_key FROM user_table where user_nm=?;");
     $st->bindValue(1, $to, PDO::PARAM_STR);
+    $st->execute();
+    
     $data = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('PUBLIC KEY ' . $row['public_key']);
