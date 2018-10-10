@@ -114,6 +114,8 @@ $app->post('inbox/send', function(Request $request) use($app) {
         
         $secret_key = $row['public_key'];
         $secret_iv = $row['public_key'] . 'iv';
+        $encrypt_method = "AES-256-CBC";
+        
         
         $key = hash( 'sha256', $secret_key );
         $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
@@ -124,8 +126,6 @@ $app->post('inbox/send', function(Request $request) use($app) {
         $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
         $app['monolog']->addDebug('DECRYPT' . $output);
         
-        
-        $data[] = pg_unescape_bytea(base64_encode($row['public_key']));
     }
     
     $app['monolog']->addDebug('INSERT INTO message_table (to_id, from_id, subject, text) values ('. $to . ',' . $from . ',' . $subject .',' . $message. ');');
