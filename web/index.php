@@ -111,7 +111,9 @@ $app->post('inbox/send', function(Request $request) use($app) {
     
     $data = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('PUBLIC KEY ' . pg_unescape_bytea(base64_encode($row['public_key'])));
+        $app['monolog']->addDebug('ENCRYPT ' . openssl_encrypt( $message, 'aes-128-gcm', $row['public_key']));
+        $app['monolog']->addDebug('DECRYPT' . openssl_decrypt( $message, 'aes-128-gcm', $row['public_key']));
+        
         $data[] = pg_unescape_bytea(base64_encode($row['public_key']));
     }
     
