@@ -89,7 +89,7 @@ $app->post('/register', function(Request $request) use($app) {
   }   
 });
 
-$app->post('/send', function(Request $request) use($app) {
+$app->post('inbox/send', function(Request $request) use($app) {
     //TODO figure out how to determine from field
     $username = $app['session']->get('user');
     $app['monolog']->addDebug('session: ' . $username);
