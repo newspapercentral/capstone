@@ -262,7 +262,7 @@ $app->post('/reset', function(Request $request) use($app) {
 $app->get('/inbox/', function() use($app) {
     
     $username = $app['session']->get('user');
-    $app['monolog']->addDebug('Inbox user is' . $username);
+    $app['monolog']->addDebug('Inbox user is ' . $username);
     
     if($username == ''){
         return $app->redirect('../');//go back to login
@@ -296,6 +296,8 @@ $app->get('/inbox/', function() use($app) {
             $key = hash( 'sha256', $secret_key );
             $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
 
+            $app['monolog']->addDebug('row[\'text\']' . $row['text']);
+            $app['monolog']->addDebug('data[\'text\']' . $data['text']);
             
             $output = openssl_decrypt( base64_decode( $row['text'] ), $encrypt_method, $key, 0, $iv );
             $app['monolog']->addDebug('DECRYPT' . $output);
