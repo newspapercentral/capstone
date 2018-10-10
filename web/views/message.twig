@@ -4,7 +4,13 @@
 	<label>Username:{{username}}</label>
 	<ul>
 	{% for d in data %}
-	  <li> From: {{ d.from_id }} ({{d.subject}}): {{d.text}} </li>
+		<label> From: {{d.from_id}}</label>
+		<label> To: {{d.to_id}} </label>
+		<label> Date: {{d.last_up_tm }}</label>
+		<label> Subject: {{d.subject}}</label>
+		<label> {{d.text}}</label>
+		<hr>
+		<br><br><br>
 	  
 	{% else %}
 	  <li>No messages!</li>

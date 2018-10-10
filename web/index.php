@@ -194,7 +194,7 @@ $app->get('/inbox/', function() use($app) {
     if($username == ''){
         return $app->redirect('../');//go back to login
     }else{
-        $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=? or from_id=?;');
+        $st = $app['pdo']->prepare('SELECT * FROM message_table where to_id=? or from_id=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
         $st->bindValue(2, $username, PDO::PARAM_STR);
         $st->execute();
