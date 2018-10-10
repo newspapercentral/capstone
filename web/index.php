@@ -103,6 +103,15 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $subject =  $request->get('subject');
     $message  = $request->get('message');
     
+    //TODO get public key for to
+    $st = $app['pdo']->prepare("SELECT public_key FROM user_table where user_nm=?;");
+    $st->bindValue(1, $to, PDO::PARAM_STR);
+    $data = array();
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('PUBLIC KEY ' . $row['public_key']);
+        $data[] = $row['public_key'];
+    }
+    
     $app['monolog']->addDebug('INSERT INTO message_table (to_id, from_id, subject, text) values ('. $to . ',' . $from . ',' . $subject .',' . $message. ');');
     
     $st = $app['pdo']->prepare("INSERT INTO message_table (to_id, from_id, subject, text) values (?,?,?,?);");
