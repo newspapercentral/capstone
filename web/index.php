@@ -182,6 +182,58 @@ $app->post('/reset', function(Request $request) use($app) {
     //TODO update db for this post
     $username = $request->get('username');
     $secAnswer = $request->get('securityAnswer');
+    $password = $request->get('password');
+    
+    
+    //start
+    $app['monolog']->addDebug('SELECT security_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=' . $username .';');
+    
+    //Select user record from user_table
+    $st = $app['pdo']->prepare('SELECT security_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=?;');
+    $st->bindValue(1, $username, PDO::PARAM_STR);
+    $st->execute();
+    
+    //extract hashed password from table
+    $hash='';
+    $bad_attempts=0;
+    $last_login_tm='';
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $hash = $row['security_answer'];
+        $bad_attempts=$row['bad_attempts'];
+        $last_login_tm=$row['age'];
+    }
+    
+    $app['monolog']->addDebug('$hash=' . $hash);
+    $app['monolog']->addDebug('$$bad_attempts=' . $bad_attempts);
+    $app['monolog']->addDebug('$last_login_tm=' . $last_login_tm);
+    $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($secAnswer, $hash));
+    
+    //PreValidate: Need to get a row in the database
+    //     * (bad_attempts <= 3 OR logged in more than 5 hours ago)
+    //Validate: Password hash matches hash in the database
+    if($hash !== '' && ($badAttempts <= 3 || $last_login_tm) && password_verify($secAnswer, $hash)){
+        $app['monolog']->addDebug('USER IS VERIFIED');
+        $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, password=? last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
+        $st->bindValue(1, $password, PDO::PARAM_STR);
+        $st->bindValue(2, $username, PDO::PARAM_STR);
+        $st->execute();
+        
+        $app['monolog']->addDebug('Reset bad attempts to 0 and user password');
+        //set the session ID
+        $app['session']->set('user', $username);
+        $app['monolog']->addDebug('Set session user to ' . $username);
+        
+        return $app->redirect('/inbox/');
+    }else{
+        //Invalid User - set bad attempts > 3 for higher threshold of security
+        $app['monolog']->addDebug('USER IS DENIED');
+        $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = bad_attempts +3, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
+        $st->bindValue(1, $username, PDO::PARAM_STR);
+        $st->execute();
+        $app['monolog']->addDebug('Incremented bad attempts');
+        
+        return $app->redirect('../?success=false');
+    }
     return $app->redirect('/');
     
 });
