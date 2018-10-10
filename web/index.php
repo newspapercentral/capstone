@@ -186,7 +186,7 @@ $app->post('/reset', function(Request $request) use($app) {
     $app['monolog']->addDebug('SELECT security_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=' . $username .';');
     
     //Select user record from user_table
-    $st = $app['pdo']->prepare('SELECT security_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=?;');
+    $st = $app['pdo']->prepare('SELECT sec_answer, bad_attempts, (age(last_login_tm)> INTERVAL \'5 hours\')as age FROM user_table WHERE user_nm=?;');
     $st->bindValue(1, $username, PDO::PARAM_STR);
     $st->execute();
     
@@ -195,7 +195,7 @@ $app->post('/reset', function(Request $request) use($app) {
     $bad_attempts=0;
     $last_login_tm='';
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $hash = $row['security_answer'];
+        $hash = $row['sec_answer'];
         $bad_attempts=$row['bad_attempts'];
         $last_login_tm=$row['age'];
     }
@@ -208,7 +208,7 @@ $app->post('/reset', function(Request $request) use($app) {
     //PreValidate: Need to get a row in the database
     //     * (bad_attempts <= 3 OR logged in more than 5 hours ago)
     //Validate: Password hash matches hash in the database
-    if($hash !== '' && ($badAttempts <= 3 || $last_login_tm) && password_verify($secAnswer, $hash)){
+    if($hash !== '' && ($bad_attempts <= 3 || $last_login_tm === true) && password_verify($secAnswer, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, password=? last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $password, PDO::PARAM_STR);
