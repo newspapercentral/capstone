@@ -206,7 +206,12 @@ $app->post('/login', function(Request $request) use($app) {
     
 });
 
-$app->post('/reset', function(Request $request) use($app) {
+$app->get('/reset', function(Request $request) use($app) {
+    return $app['twig']->render('reset.twig', array(
+    ));
+});
+
+$app->post('/reset/send', function(Request $request) use($app) {
     //TODO update db for this post
     $username = $request->get('username');
     $secAnswer = $request->get('securityAnswer');
