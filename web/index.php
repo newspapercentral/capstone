@@ -145,7 +145,7 @@ $app->post('/login', function(Request $request) use($app) {
     if($last_login_tm === true){
         $test='true';
     }else{
-        $true='false';
+        $test='false';
     }
         
     $app['monolog']->addDebug('Variable values');
