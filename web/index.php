@@ -201,14 +201,22 @@ $app->get('/inbox/', function() use($app) {
         
         $data = array();
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            //$app['monolog']->addDebug('Row ' . $row['user_nm']);//$row['name'] for column
             $data[] = $row;
+            
+        }
+        
+        $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
+        $users_st->execute();
+        $user_list = array();
+        while ($row = $users_st->fetch(PDO::FETCH_ASSOC)) {
+            $user_list[] = $row;
             
         }
 
         
         return $app['twig']->render('message.twig', array(
             'username' => $username,
+            'user_list' => $user_list,
             'data' => $data
         ));
     }
