@@ -141,14 +141,14 @@ $app->post('/login', function(Request $request) use($app) {
         $last_login_tm=$row['age'];
     }
     
-    $test='';
+    $test='initial value';
     if($last_login_tm){
         $test='true';
     }else{
         $true='false';
     }
         
-    
+    $app['monolog']->addDebug('Variable values');
     $app['monolog']->addDebug('$hash=' . $hash);
     $app['monolog']->addDebug('$$bad_attempts=' . $bad_attempts);
     $app['monolog']->addDebug('$last_login_tm=' . $test );
