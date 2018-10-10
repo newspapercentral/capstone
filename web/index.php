@@ -179,7 +179,7 @@ $app->post('/reset', function(Request $request) use($app) {
     //TODO update db for this post
     $username = $request->get('username');
     $secAnswer = $request->get('securityAnswer');
-    password_hash($request->get('password'), PASSWORD_DEFAULT);
+    $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
     
     
     //start
