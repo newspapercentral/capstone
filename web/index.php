@@ -150,7 +150,7 @@ $app->post('/login', function(Request $request) use($app) {
     //PreValidate: Need to get a row in the database
     //     * (bad_attempts <= 3 OR logged in more than 5 hours ago)
     //Validate: Password hash matches hash in the database
-    if($hash !== '' && ($badAttempts <= 3 || $last_login_tm === true) && password_verify($password, $hash)){
+    if($hash !== '' && ($bad_attempts <= 3 || $last_login_tm === true) && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
