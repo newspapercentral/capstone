@@ -123,7 +123,7 @@ $app->post('inbox/send', function(Request $request) use($app) {
         $output = base64_encode( openssl_encrypt( $message, $encrypt_method, $key, 0, $iv ) );
         $app['monolog']->addDebug('ENCCRYPT' . $output);
         
-        $output = openssl_decrypt( base64_decode( $message ), $encrypt_method, $key, 0, $iv );
+        $output = openssl_decrypt( base64_decode( $output ), $encrypt_method, $key, 0, $iv );
         $app['monolog']->addDebug('DECRYPT' . $output);
         
     }
