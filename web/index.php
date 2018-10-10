@@ -141,15 +141,23 @@ $app->post('/login', function(Request $request) use($app) {
         $last_login_tm=$row['age'];
     }
     
+    $test='';
+    if($last_login_tm){
+        $test='true';
+    }else{
+        $true='false';
+    }
+        
+    
     $app['monolog']->addDebug('$hash=' . $hash);
     $app['monolog']->addDebug('$$bad_attempts=' . $bad_attempts);
-    $app['monolog']->addDebug('$last_login_tm=' . $last_login_tm == '');
+    $app['monolog']->addDebug('$last_login_tm=' . $test );
     $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
     //PreValidate: Need to get a row in the database
     //     * (bad_attempts <= 3 OR logged in more than 5 hours ago)
     //Validate: Password hash matches hash in the database
-    if($hash !== '' && ($badAttempts <= 3 || $last_login_tm) && password_verify($password, $hash)){
+    if($hash !== '' && ($badAttempts <= 3 || $last_login_tm !== 1) && password_verify($password, $hash)){
         $app['monolog']->addDebug('USER IS VERIFIED');
         $st = $app['pdo']->prepare('UPDATE user_table SET bad_attempts = 0, last_login_tm=CURRENT_TIMESTAMP WHERE user_nm=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
