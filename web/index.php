@@ -65,8 +65,13 @@ $app->get('/db/{table}', function($table) use($app) {
   ));
 });
 
+$app->get('/register', function(Request $request) use($app) {
+    return $app['twig']->render('reg.twig', array(
+    ));
+});
+
 //Add new handler to insert into database
-$app->post('/register', function(Request $request) use($app) {
+$app->post('/register/send', function(Request $request) use($app) {
   
   $username = $request->get('username');
   $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
@@ -80,10 +85,10 @@ $app->post('/register', function(Request $request) use($app) {
   
   if($st->execute()){
       //INSERT worked
-      return $app->redirect('../?success=true');
+      return $app->redirect('../../?success=true');
   }else{
       //INSERT failed
-      return $app->redirect('../?success=fail');
+      return $app->redirect('../../?success=fail');
   }   
 });
 
