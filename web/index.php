@@ -120,10 +120,6 @@ $app->post('inbox/send', function(Request $request) use($app) {
 });
 
 $app->post('/login', function(Request $request) use($app) {
-    //TODO set session user after log in
-    //TODO read this user from inbox (messages.twig page)
-    //TODO remove sessio user after logging out
-    //Get parameters from UI
     $username = $request->get('username');
     $password = $request->get('password');
     $app['monolog']->addDebug('Username: ' . $username . "; Password: " . $password);
@@ -147,7 +143,7 @@ $app->post('/login', function(Request $request) use($app) {
     
     $app['monolog']->addDebug('$hash=' . $hash);
     $app['monolog']->addDebug('$$bad_attempts=' . $bad_attempts);
-    $app['monolog']->addDebug('$last_login_tm=' . $last_login_tm);
+    $app['monolog']->addDebug('$last_login_tm=' . $last_login_tm == '');
     $app['monolog']->addDebug('password_verify($password, $hash)' . password_verify($password, $hash));
     
     //PreValidate: Need to get a row in the database
