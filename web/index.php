@@ -102,7 +102,8 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $from = $username;
     $subject =  $request->get('subject');
     $message  = $request->get('message');
-    $message_id = $from . time();
+    
+    $app['monolog']->addDebug('INSERT INTO message_table (to_id, from_id, subject, text) values ('. $to . ',' . $from . ',' . $subject .',' . $message. ');');
     
     $st = $app['pdo']->prepare("INSERT INTO message_table (to_id, from_id, subject, text) values (?,?,?,?);");
     $st->bindValue(1, $to, PDO::PARAM_STR);
