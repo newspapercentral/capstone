@@ -71,14 +71,14 @@ $app->post('/register', function(Request $request) use($app) {
   $username = $request->get('username');
   $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
   $securityAnswer = password_hash($request->get('securityAnswer'), PASSWORD_DEFAULT);  
+  $public_key = openssl_random_pseudo_bytes(128);
+  $app['monolog']->addDebug('INSERT INTO user_table (user_nm, password, sec_question, sec_answer, public_key) values ('. $username .',' . $password .', null,' . $securityAnswer . ',' .$public_key .  ');');
   
   $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer, public_key) values (?,?,'null', ?, ?);");
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
   $st->bindValue(3, $securityAnswer, PDO::PARAM_STR);
-  $st->bindValue(4, openssl_random_pseudo_bytes(128), PDO::PARAM_STR);
-  $app['monolog']->addDebug('Veryify ' . password_verify($request->get('password'), $password));
-  $app['monolog']->addDebug('Bad Password ' . password_verify('not the password', $password));
+  $st->bindValue(4, $public_key, PDO::PARAM_STR);
   
   if($st->execute()){
       //INSERT worked
