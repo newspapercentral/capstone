@@ -92,7 +92,8 @@ $app->post('/register', function(Request $request) use($app) {
 
 $app->post('/send', function(Request $request) use($app) {
     //TODO figure out how to determine from field
-    $app['monolog']->addDebug('USER-SESSION' . $session->get('user'));
+    $ses = $request->getSession();
+    $app['monolog']->addDebug('USER-SESSION' . $ses->get('user'));
     
     $to = $request->get('to');
     //$from = $request->get('from');
