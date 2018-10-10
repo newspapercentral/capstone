@@ -108,7 +108,6 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $st->execute();
     
     $data = array();
-    //TODO encrypt / decrypt
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Public Key ' . $row['public_key']);
         
@@ -123,8 +122,8 @@ $app->post('inbox/send', function(Request $request) use($app) {
         $output = base64_encode( openssl_encrypt( $message, $encrypt_method, $key, 0, $iv ) );
         $app['monolog']->addDebug('ENCCRYPT' . $output);
         
-        $output = openssl_decrypt( base64_decode( $output ), $encrypt_method, $key, 0, $iv );
-        $app['monolog']->addDebug('DECRYPT' . $output);
+        //$output = openssl_decrypt( base64_decode( $output ), $encrypt_method, $key, 0, $iv );
+        //$app['monolog']->addDebug('DECRYPT' . $output);
         
     }
     
@@ -134,7 +133,7 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $st->bindValue(1, $to, PDO::PARAM_STR);
     $st->bindValue(2, $from, PDO::PARAM_STR);
     $st->bindValue(3, $subject, PDO::PARAM_STR);
-    $st->bindValue(4, $message, PDO::PARAM_STR);
+    $st->bindValue(4, $output, PDO::PARAM_STR);
     
     if($st->execute()){
         return $app->redirect('../inbox/?success=true');
@@ -268,6 +267,20 @@ $app->get('/inbox/', function() use($app) {
     if($username == ''){
         return $app->redirect('../');//go back to login
     }else{
+        
+        //TODO get public key for to
+        $app['monolog']->addDebug('SELECT public_key FROM user_table where user_nm=' . $username .';');
+        $st = $app['pdo']->prepare("SELECT public_key FROM user_table where user_nm=?;");
+        $st->bindValue(1, $username, PDO::PARAM_STR);
+        $st->execute();
+        
+        $secret_key = '';
+        while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            $app['monolog']->addDebug('Public Key ' . $row['public_key']);
+            $secret_key = $row['public_key'];
+
+        }
+        
         $st = $app['pdo']->prepare('SELECT * FROM message_table where to_id=? or from_id=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
         $st->bindValue(2, $username, PDO::PARAM_STR);
@@ -277,6 +290,16 @@ $app->get('/inbox/', function() use($app) {
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $data[] = $row;
             
+            $secret_iv = $public_key . 'iv';
+            $encrypt_method = "AES-256-CBC";
+            $key = hash( 'sha256', $secret_key );
+            $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+            
+            $output = openssl_decrypt( base64_decode( $row['text'] ), $encrypt_method, $key, 0, $iv );
+            $app['monolog']->addDebug('DECRYPT' . $output);
+            
+            $data['text'] = $output;
         }
         
         $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
