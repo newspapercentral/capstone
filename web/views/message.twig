@@ -6,9 +6,9 @@
     <form action="send" method="post">
         <h2 class="text-center">Send a New Message</h2>       
         <div class="form-group">
-        	<select name="to">
+        	<label>Send To:</label><select name="to">
         	{% for u in user_list %}
-        		<option value="{{u}}">{{u}}</option>
+        		<option value="{{u.user_nm}}">{{u.user_nm}}</option>
         	{% else %}
         		<option value="">}</option>
         	{% endfor %}	
