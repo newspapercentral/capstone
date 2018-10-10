@@ -168,6 +168,8 @@ $app->post('/login', function(Request $request) use($app) {
         $app['monolog']->addDebug('Reset bad attempts to 0');
         //set the session ID
         $app['session']->set('user', $username);
+        $app['monolog']->addDebug('Set session user to ' . $username);
+        
         
      
         
@@ -196,7 +198,9 @@ $app->post('/reset', function(Request $request) use($app) {
 $app->get('/inbox/', function() use($app) {
     
     $username = $app['session']->get('user');
-    if($username !== ''){
+    $app['monolog']->addDebug('Inbox user is' . $username);
+    
+    if($username == ''){
         return $app->redirect('../');//go back to login
     }else{
         $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=?;');
