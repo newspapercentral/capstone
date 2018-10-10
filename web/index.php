@@ -86,6 +86,8 @@ $app->post('/register', function(Request $request) use($app) {
 
 $app->post('/send', function(Request $request) use($app) {
     //TODO figure out how to determine from field
+    $app['monolog']->addDebug('USER-SESSION' . $app.session.get('user'));
+    
     $to = $request->get('to');
     //$from = $request->get('from');
     $subject =  $request->get('subject');
@@ -102,17 +104,24 @@ $app->post('/send', function(Request $request) use($app) {
     if($st->execute()){
         //INSERT worked
         return $app['twig']->render('message.twig', array(
+            'username'=> $username,
+            'password'=> $password,
             'data' => $data
         ));
     }else{
         //INSERT failed
         return $app['twig']->render('message.twig', array(
+            'username'=> $username,
+            'password'=> $password,
             'data' => $data
         ));
     }
 });
 
 $app->post('/login', function(Request $request) use($app) {
+    //TODO set session user after log in
+    //TODO read this user from inbox (messages.twig page)
+    //TODO remove sessio user after logging out
     //Get parameters from UI
     $username = $request->get('username');
     $password = $request->get('password');
@@ -161,6 +170,8 @@ $app->post('/login', function(Request $request) use($app) {
              $data[] = $row;
              
         }
+        
+        $this->get('session')->set('user', 'superuser');
         
         return $app['twig']->render('message.twig', array(
             'username'=> $username,
