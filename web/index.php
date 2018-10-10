@@ -281,6 +281,7 @@ $app->get('/inbox/', function() use($app) {
 
         }
         
+        $app['monolog']->addDebug('SELECT * FROM message_table where to_id=' . $username . 'or from_id=' . $username .';');
         $st = $app['pdo']->prepare('SELECT * FROM message_table where to_id=? or from_id=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
         $st->bindValue(2, $username, PDO::PARAM_STR);
@@ -299,7 +300,7 @@ $app->get('/inbox/', function() use($app) {
             $output = openssl_decrypt( base64_decode( $row['text'] ), $encrypt_method, $key, 0, $iv );
             $app['monolog']->addDebug('DECRYPT' . $output);
             
-            $data['text'] = $output;
+            //$data['text'] = $output;
         }
         
         $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
