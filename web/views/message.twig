@@ -4,12 +4,12 @@
 	<label>Username:{{username}}</label>
 	<ul>
 	{% for d in data %}
-		<label> From: {{d.from_id}}</label>
-		<label> To: {{d.to_id}} </label>
-		<label> Date: {{d.last_up_tm }}</label>
-		<label> Subject: {{d.subject}}</label>
-		<label> {{d.text}}</label>
 		<hr>
+		<label> From: {{d.from_id}}</label><br>
+		<label> To: {{d.to_id}} </label><br>
+		<label> Date: {{d.last_up_tm }}</label><br>
+		<label> Subject: {{d.subject}}</label><br>
+		<label> {{d.text}}</label>
 		<br><br><br>
 	  
 	{% else %}
