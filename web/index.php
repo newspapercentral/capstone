@@ -71,14 +71,12 @@ $app->post('/register', function(Request $request) use($app) {
   $username = $request->get('username');
   $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
   $securityAnswer = password_hash($request->get('securityAnswer'), PASSWORD_DEFAULT);  
-  $public_key = openssl_random_pseudo_bytes(128);
-  $app['monolog']->addDebug('INSERT INTO user_table (user_nm, password, sec_question, sec_answer, public_key) values ('. $username .',' . $password .', null,' . $securityAnswer . ',' .$public_key .  ');');
+  $app['monolog']->addDebug('INSERT INTO user_table (user_nm, password, sec_question, sec_answer) values ('. $username .',' . $password .', null,' . $securityAnswer  .  ');');
   
-  $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer, public_key) values (?,?,'null', ?, ?);");
+  $st = $app['pdo']->prepare("INSERT INTO user_table (user_nm, password, sec_question, sec_answer, public_key) values (?,?,'null', ?);");
   $st->bindValue(1, $username, PDO::PARAM_STR);
   $st->bindValue(2, $password, PDO::PARAM_STR);
   $st->bindValue(3, $securityAnswer, PDO::PARAM_STR);
-  $st->bindValue(4, $public_key, PDO::PARAM_LOB);
   
   if($st->execute()){
       //INSERT worked
@@ -110,9 +108,22 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $st->execute();
     
     $data = array();
+    //TODO encrypt / decrypt
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('ENCRYPT ' . openssl_encrypt( $message, 'aes-128-gcm', $row['public_key']));
-        $app['monolog']->addDebug('DECRYPT' . openssl_decrypt( $message, 'aes-128-gcm', $row['public_key']));
+        $app['monolog']->addDebug('Public Key ' . $row['public_key']);
+        
+        $secret_key = $row['public_key'];
+        $secret_iv = $row['public_key'] . 'iv';
+        
+        $key = hash( 'sha256', $secret_key );
+        $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+        
+        $output = base64_encode( openssl_encrypt( $message, $encrypt_method, $key, 0, $iv ) );
+        $app['monolog']->addDebug('ENCCRYPT' . $output);
+        
+        $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+        $app['monolog']->addDebug('DECRYPT' . $output);
+        
         
         $data[] = pg_unescape_bytea(base64_encode($row['public_key']));
     }
