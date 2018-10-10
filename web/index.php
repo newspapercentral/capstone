@@ -9,9 +9,6 @@ $app['debug'] = true;
 use Symfony\Component\HttpFoundation\Request; 
 use Symfony\Component\HttpFoundation\Session\Session;
 
-$session = new Session();
-$session->start();
-$session->set('user', 'superuser');
 
 //END My ADD
 
@@ -24,6 +21,8 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
 ));
+
+$app->register(new Silex\Provider\SessionServiceProvider());
 
 // Our web handlers
 
@@ -92,11 +91,9 @@ $app->post('/register', function(Request $request) use($app) {
 
 $app->post('/send', function(Request $request) use($app) {
     //TODO figure out how to determine from field
-    $ses = $app->getSession();
-    $app['monolog']->addDebug('APP' . $app);
+    $ses = $app['session']->get('user');
     $app['monolog']->addDebug('session' . $ses);
     
-    $app['monolog']->addDebug('USER-SESSION' . $ses->get('user'));
     
     $to = $request->get('to');
     //$from = $request->get('from');
@@ -181,8 +178,7 @@ $app->post('/login', function(Request $request) use($app) {
              
         }
         
-        //$session->set('user', 'superuser');
-        //$app['monolog']->addDebug('set user in session');
+        $app['session']->set('user', 'super-user');
         
         
         return $app['twig']->render('message.twig', array(
