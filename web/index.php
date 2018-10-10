@@ -189,6 +189,7 @@ $app->post('/login', function(Request $request) use($app) {
 });
 
 $app->post('/reset', function(Request $request) use($app) {
+    //TODO update db for this post
     $username = $request->get('username');
     $secAnswer = $request->get('securityAnswer');
     return $app->redirect('/');
@@ -203,8 +204,9 @@ $app->get('/inbox/', function() use($app) {
     if($username == ''){
         return $app->redirect('../');//go back to login
     }else{
-        $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=?;');
+        $st = $app['pdo']->prepare('SELECT to_id, from_id, subject, text FROM message_table where to_id=? or from_id=?;');
         $st->bindValue(1, $username, PDO::PARAM_STR);
+        $st->bindValue(2, $username, PDO::PARAM_STR);
         $st->execute();
         
         $data = array();
@@ -213,16 +215,13 @@ $app->get('/inbox/', function() use($app) {
             $data[] = $row;
             
         }
- 
+
+        
         return $app['twig']->render('message.twig', array(
             'username' => $username,
             'data' => $data
         ));
     }
-});
-
-$app->get('/inbox/login', function() use($app) {
-    return $app->redirect('../../');
 });
 
 // END MY CODE HERE
