@@ -88,10 +88,10 @@ $app->post('/register/send', function(Request $request) use($app) {
   
   if($st->execute()){
       //INSERT worked
-      return $app->redirect('../../?message=true');
+      return $app->redirect('../../?message=Successfully%20Registered');
   }else{
       //INSERT failed
-      return $app->redirect('../../?message=fail');
+      return $app->redirect('../../?message=Registration%20Failed');
   }   
 });
 
@@ -146,9 +146,9 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $st->bindValue(4, $output, PDO::PARAM_STR);
     
     if($st->execute()){
-        return $app->redirect('../inbox/?message=true');
+        return $app->redirect('../inbox/?message=Message%20Sent');
     }else{
-        return $app->redirect('../inbox/?message=fail');
+        return $app->redirect('../inbox/?message=Message%20Failed-Please%20try%20again');
         
     }
 });
@@ -204,7 +204,7 @@ $app->post('/login/send', function(Request $request) use($app) {
         $st->execute();
         $app['monolog']->addDebug('Incremented bad attempts');
 
-        return $app->redirect('../?message=false');
+        return $app->redirect('../?message=Invalid%20username%20and%20password-if%20you%20tried%20more%20than%203%20times%20your%20account%20will%20be%20locked%20for%205%20hours');
     }
     
 });
@@ -259,7 +259,7 @@ $app->post('/reset/send', function(Request $request) use($app) {
         $app['session']->set('user', $username);
         $app['monolog']->addDebug('Set session user to ' . $username);
         
-        return $app->redirect('/');
+        return $app->redirect('/?message=Password%20reset');
     }else{
         //Invalid User - set bad attempts > 3 for higher threshold of security
         $app['monolog']->addDebug('USER IS DENIED');
@@ -268,7 +268,7 @@ $app->post('/reset/send', function(Request $request) use($app) {
         $st->execute();
         $app['monolog']->addDebug('Incremented bad attempts');
         
-        return $app->redirect('../?message=false');
+        return $app->redirect('../?message=Invalid%20username%20and%20security%20answer-If%20you%20try%20more%20than%202%20times%20your%20account%20will%20be%20locked%20for%205%20hours');
     }
     return $app->redirect('/');
     
