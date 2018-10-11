@@ -33,7 +33,7 @@
   var message = getUrlParam('message','');
 
   if(message != ''){
-	  document.getElementById("message").innerHTML = message.replace("%20").join(" ");
+	  document.getElementById("message").innerHTML = message.split("%20").join(" ");
 	  document.getElementById("message").classList.add('alert');
 	  document.getElementById("message").classList.add('alert-info');
   }
