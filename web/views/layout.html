@@ -33,9 +33,9 @@
   var message = getUrlParam('message','');
 
   if(message != ''){
-	  document.getElementById("message").innerHTML = message.replace("%20" , " ");
-	  document.getElementById("MyElement").classList.add('alert');
-	  document.getElementById("MyElement").classList.add('alert-info');
+	  document.getElementById("message").innerHTML = message.replace("%20").join(" ");
+	  document.getElementById("message").classList.add('alert');
+	  document.getElementById("message").classList.add('alert-info');
   }
   
   </script>
