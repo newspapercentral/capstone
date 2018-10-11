@@ -204,7 +204,7 @@ $app->post('/login/send', function(Request $request) use($app) {
         $st->execute();
         $app['monolog']->addDebug('Incremented bad attempts');
 
-        return $app->redirect('?message=Invalid%20username%20and%20password-if%20you%20tried%20more%20than%203%20times%20your%20account%20will%20be%20locked%20for%205%20hours');
+        return $app->redirect('../?message=Invalid%20username%20and%20password-if%20you%20tried%20more%20than%203%20times%20your%20account%20will%20be%20locked%20for%205%20hours');
     }
     
 });
