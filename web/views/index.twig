@@ -22,13 +22,13 @@
   					statement binding to prevent SQL injection attacks.
   				</li>
 			  	<li>
-			  		Username Field (alphanumeric with at least 3 characters). This system 
+			  		Username Field (alphanumeric 3-20 characters). This system 
 			  		is not expecting high volumes of traffic, so there is no need for
 			  		extensive use of special characters to allow users to come up with
 			  		unique names.
 			  	</li>
 			  	<li>
-			  		Password Field (alphabet with at least 16 characters). The system aims
+			  		Password Field (alphabet 16-30 characters). The system aims
 			  		to maximize security and usability by taking advantage of the chunking
 			  		concept. There are 4 * 10^22 possible passwords with this requirement,
 			  		making a correct random guess highly unlikely. The easiest approach
@@ -36,11 +36,17 @@
 			  		As a result, the easiest path in the system, is also the most secure.
 			  	</li>
 			  	<li>
-			  		Security answer (alphabet with at least 5 characters). The shorter
+			  		Security answer (alphabet 5-20 characters). The shorter
 			  		security answer requirements reduces the overall security of the
 			  		user authentication system. However, the ability to memorize the
 			  		security answer is more important than security, otherwise accounts 
 			  		could be locked forever. 
+			  	</li>
+			  	<li>
+			  		Subject (alphanumeric 1-20 character)
+			  	</li>
+			  	<li>
+			  		Message (1-140 characters)
 			  	</li>
 			</ul>
 		<li> Brute force attacks </li>
