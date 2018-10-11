@@ -7,6 +7,10 @@
 <body>
   {% include 'nav.html' %}
 
+  
+  <div id="message"></div>
+  {% block content %}{% endblock %}
+  
   <script>
   function getUrlVars() {
 	    var vars = {};
@@ -33,7 +37,5 @@
   }
   
   </script>
-  <div id="message"></div>
-  {% block content %}{% endblock %}
 </body>
 </html>
