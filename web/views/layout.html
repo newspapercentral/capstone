@@ -7,12 +7,33 @@
 <body>
   {% include 'nav.html' %}
 
-  <?php 
-     if (isset($_GET['message']) && $_GET['message'] != '') {
-          echo '<div id="display">wrong input</div>';
-     }
-  ?>
+  <script>
+  function getUrlVars() {
+	    var vars = {};
+	    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+	        vars[key] = value;
+	    });
+	    return vars;
+	}
+
   
+  function getUrlParam(parameter, defaultvalue){
+	    var urlparameter = defaultvalue;
+	    if(window.location.href.indexOf(parameter) > -1){
+	        urlparameter = getUrlVars()[parameter];
+	        }
+	    return urlparameter;
+	}
+
+  
+  var message = getUrlParam('message','');
+
+  if(message != ''){
+	  document.getElementById("message").innerHTML = message;
+  }
+  
+  </script>
+  <div id="message"></div>
   {% block content %}{% endblock %}
 </body>
 </html>
