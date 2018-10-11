@@ -13,10 +13,62 @@
 	
 	<h3>Security Overview</h3>
 	<ul>
+		<li> Clean user input </li>
+			<ul style="list-style-type:circle">
+  				<li>
+  					The system validates input on the front end before the user can submit
+  					invalid data and also validates input again on the back end before
+  					inserting into the database. The system also uses proper SQL
+  					statement binding to prevent SQL injection attacks.
+  				</li>
+			  	<li>
+			  		Username Field (alphanumeric with at least 3 characters). This system 
+			  		is not expecting high volumes of traffic, so there is no need for
+			  		extensive use of special characters to allow users to come up with
+			  		unique names.
+			  	</li>
+			  	<li>
+			  		Password Field (alphabet with at least 16 characters). The system aims
+			  		to maximize security and usability by taking advantage of the chunking
+			  		concept. There are 4 * 10^22 possible passwords with this requirement,
+			  		making a correct random guess highly unlikely. The easiest approach
+			  		for remembering 16 characters is using a phrase or random words.
+			  		As a result, the easiest path in the system, is also the most secure.
+			  	</li>
+			  	<li>
+			  		Security answer (alphabet with at least 5 characters). The shorter
+			  		security answer requirements reduces the overall security of the
+			  		user authentication system. However, the ability to memorize the
+			  		security answer is more important than security, otherwise accounts 
+			  		could be locked forever. 
+			  	</li>
+			</ul>
+		<li> Brute force attacks </li>
+			<ul style="list-style-type:circle">
+				<li>Login (3 attempts every 5 hours). Given 4 * 10^22 possible passwords
+				it would take well more than a trillion years to try every password. A clever
+				hacker could assume certain properties about most passwords in the system.
+				Users are likely to use common dictionary words, which reduces the number
+				of possibilities significantly. It is estimated that 3,000 words
+				cover 95% of common texts. If a user picked 4 random words, there are still
+				81 trillion possible passwords, which would take 14 billion years to exhaust
+				all possible outcomes.
+				</li>
+				<li>
+					Password Reset (2 attempts every 5 hours). Given 11 million possible
+					security answers and 10 password attepts per day, it would take 
+					3,000 years to try them all. A clever hacker could attept the same
+					trick with 3,000 common words, which could be hacked in about a year.
+					While this is a significant vulnerability, given the scope of the project
+					and limited sensitivity of the data, this risk is accepted. This risk
+					could be easily mitigated by increasing the number of required characters
+					for security answers. However, the reduction in usability is not worth
+					the increased security for this kind of system.
+				</li>
+			</ul>
 		<li> Password Hashing </li>
 		<li> Session variable </li>
 		<li> Encrypted messages </li>
-		<li> Bad attempt counter </li>
 		<li> Password reset </li>
 		<li> Password requirements </li>
 	</ul>
