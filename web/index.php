@@ -88,10 +88,10 @@ $app->post('/register/send', function(Request $request) use($app) {
   
   if($st->execute()){
       //INSERT worked
-      return $app->redirect('../../?success=true');
+      return $app->redirect('../../?message=true');
   }else{
       //INSERT failed
-      return $app->redirect('../../?success=fail');
+      return $app->redirect('../../?message=fail');
   }   
 });
 
@@ -146,9 +146,9 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $st->bindValue(4, $output, PDO::PARAM_STR);
     
     if($st->execute()){
-        return $app->redirect('../inbox/?success=true');
+        return $app->redirect('../inbox/?message=true');
     }else{
-        return $app->redirect('../inbox/?success=fail');
+        return $app->redirect('../inbox/?message=fail');
         
     }
 });
@@ -204,7 +204,7 @@ $app->post('/login/send', function(Request $request) use($app) {
         $st->execute();
         $app['monolog']->addDebug('Incremented bad attempts');
 
-        return $app->redirect('../?success=false');
+        return $app->redirect('../?message=false');
     }
     
 });
@@ -268,7 +268,7 @@ $app->post('/reset/send', function(Request $request) use($app) {
         $st->execute();
         $app['monolog']->addDebug('Incremented bad attempts');
         
-        return $app->redirect('../?success=false');
+        return $app->redirect('../?message=false');
     }
     return $app->redirect('/');
     

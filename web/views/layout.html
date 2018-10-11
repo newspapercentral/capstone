@@ -7,6 +7,9 @@
 <body>
   {% include 'nav.html' %}
 
+  <?php if (isset($_GET['message']) && $_GET['message'] != '') {
+     echo '<div id="display">wrong input</div>';
+  }?>
   {% block content %}{% endblock %}
 </body>
 </html>
