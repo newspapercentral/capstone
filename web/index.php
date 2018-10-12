@@ -99,7 +99,7 @@ $app->post('/register/send', function(Request $request) use($app) {
   }   
 });
 
-$app->get('inbox/compose', function(Request $request) use($app) {
+$app->get('/compose', function(Request $request) use($app) {
     
     $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
     $users_st->execute();
@@ -114,7 +114,7 @@ $app->get('inbox/compose', function(Request $request) use($app) {
     ));
 });
 
-$app->post('inbox/compose/send', function(Request $request) use($app) {
+$app->post('/compose/send', function(Request $request) use($app) {
     $username = $app['session']->get('user');
     $app['monolog']->addDebug('session: ' . $username);
     
