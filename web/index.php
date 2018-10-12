@@ -100,6 +100,7 @@ $app->post('/register/send', function(Request $request) use($app) {
 });
 
 $app->get('/compose', function(Request $request) use($app) {
+    $username = $app['session']->get('user');
     
     $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
     $users_st->execute();
@@ -110,6 +111,7 @@ $app->get('/compose', function(Request $request) use($app) {
     }
     
     return $app['twig']->render('compose.twig', array(
+        'username' => $username,
         'user_list' => $user_list
     ));
 });
