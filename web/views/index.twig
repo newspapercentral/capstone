@@ -36,17 +36,25 @@
 			  		As a result, the easiest path in the system, is also the most secure.
 			  	</li>
 			  	<li>
-			  		Security answer (alphabet 5-20 characters). The shorter
+			  		Security Answer Field (alphabet 5-20 characters). The shorter
 			  		security answer requirements reduces the overall security of the
 			  		user authentication system. However, the ability to memorize the
 			  		security answer is more important than security, otherwise accounts 
 			  		could be locked forever. 
 			  	</li>
 			  	<li>
-			  		Subject (alphanumeric 1-20 character)
+			  		To Field (valid username in User Table). The system subjects this field
+			  		to the same constraints as username.
 			  	</li>
 			  	<li>
-			  		Message (1-140 characters)
+			  		Subject Field (alphanumeric and spaces 1-20 character). The system only 
+			  		allows letters, numbers, and spaces. This field is used to identify the
+			  		message. It is not encrypted, so there is no need for any sophisticated
+			  		characters.
+			  	</li>
+			  	<li>
+			  		Message (1-140 characters). The system accepts all characters as long as
+			  		the message is shorter than 140 characters.
 			  	</li>
 			</ul>
 		<li> Brute force attacks </li>
@@ -73,9 +81,29 @@
 				</li>
 			</ul>
 		<li> Password Hashing </li>
+			<ul style="list-style-type:circle">
+				<li>
+					Passwords and security answers are hashed in the db. Even if a malicious
+					hacker was able to access the database (which are provided on the 
+					database dump links above), the information could not be used to
+					authentiate.
+				</li>
+			</ul>
 		<li> Session variable </li>
+			<ul style="list-style-type:circle">
+				<li>
+					Once the user is authenticated, the session is stored on the server.
+					If the session is ended, or the user navigates back to the homepage,
+					the session is reset and the system requires re-authentication.
+				</li>
+			</ul>			
 		<li> Encrypted messages </li>
-		<li> Password reset </li>
-		<li> Password requirements </li>
+			<ul style="list-style-type:circle">
+				<li>
+					The system uses symetric encryption to protect message text. The
+					subject field is not encrypted. This field identfies the
+					message but should not include sensitive information.
+				</li>
+			</ul>
 	</ul>
 {% endblock %}
