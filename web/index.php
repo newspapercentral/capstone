@@ -51,8 +51,12 @@ $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider
                )
 );
 
+$app->get('/dbdump', function() use($app) {
+    return $app->redirect('/dbdump/user');
+});
+
 //Add new handler to query database
-$app->get('/db/{table}', function($table) use($app) {
+$app->get('/dbdump/{table}', function($table) use($app) {
   $full_table_name = $table . '_table';
   $st = $app['pdo']->prepare('SELECT * FROM ' . $full_table_name);
   $st->execute();
@@ -95,8 +99,22 @@ $app->post('/register/send', function(Request $request) use($app) {
   }   
 });
 
-$app->post('inbox/send', function(Request $request) use($app) {
-    //TODO figure out how to determine from field
+$app->get('inbox/compose', function(Request $request) use($app) {
+    
+    $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
+    $users_st->execute();
+    $user_list = array();
+    while ($row = $users_st->fetch(PDO::FETCH_ASSOC)) {
+        $user_list[] = $row;
+        
+    }
+    
+    return $app['twig']->render('compose.twig', array(
+        'user_list' => $user_list
+    ));
+});
+
+$app->post('inbox/compose/send', function(Request $request) use($app) {
     $username = $app['session']->get('user');
     $app['monolog']->addDebug('session: ' . $username);
     
@@ -109,7 +127,6 @@ $app->post('inbox/send', function(Request $request) use($app) {
     $subject =  $request->get('subject');
     $message  = $request->get('message');
     
-    //TODO get public key for to
     $app['monolog']->addDebug('SELECT public_key FROM user_table where user_nm=' . $to .';');
     $st = $app['pdo']->prepare("SELECT public_key FROM user_table where user_nm=?;");
     $st->bindValue(1, $to, PDO::PARAM_STR);
@@ -321,19 +338,10 @@ $app->get('/inbox/', function() use($app) {
             $data[] = $row;
             
         }
-        
-        $users_st = $app['pdo']->prepare('SELECT user_nm FROM user_table;');
-        $users_st->execute();
-        $user_list = array();
-        while ($row = $users_st->fetch(PDO::FETCH_ASSOC)) {
-            $user_list[] = $row;
-            
-        }
 
         
         return $app['twig']->render('message.twig', array(
             'username' => $username,
-            'user_list' => $user_list,
             'data' => $data
         ));
     }

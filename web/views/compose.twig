@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<h3>Welcmome user: {{username}}</h3>
+	<div class="login-form">
+    <form action="compose/send" method="post">
+        <h2 class="text-center">Send a New Message</h2>       
+        <div class="form-group">
+        	<label>Send To:</label><select class="custom-select" width="200px" name="to">
+        	{% for u in user_list %}
+        		<option value="{{u.user_nm}}">{{u.user_nm}}</option>
+        	{% else %}
+        		<option value="">}</option>
+        	{% endfor %}	
+        	</select>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Subject" required="required" name="subject" maxlength="20" pattern="[A-Za-z0-9 ]{1,}">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Type your message here...(140 characters)" required="required" name="message" maxlength="140"">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Send</button>
+        </div>     
+    </form>
+	</div>
+	
+	
+
+{% endblock %}
